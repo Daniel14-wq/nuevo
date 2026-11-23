@@ -13,13 +13,16 @@ async def test_fifo(dut):
     dut.ui_in.value = 0
     dut.uio_in.value = 0
 
-    async def ciclo(entrada):
-        # Aplicar la entrada antes del flanco de subida.
-        dut.clk.value = 0
-        dut.ui_in.value = entrada
-        await Timer(500, unit="ns")
-        dut.clk.value = 1
-        await Timer(500, unit="ns")
+   
+async def ciclo(entrada):
+    # Reloj de 50 MHz (periodo de 20 ns)
+    dut.clk.value = 0
+    dut.ui_in.value = entrada
+    await Timer(10, unit="ns")
+
+    dut.clk.value = 1
+    await Timer(10, unit="ns")
+
 
     def verificar_estado(cantidad, lectura_valida, dato):
         salida = int(dut.uo_out.value)
